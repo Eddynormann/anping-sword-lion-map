@@ -56,6 +56,7 @@ html{scroll-padding-top:72px;scroll-behavior:smooth}
 .area p.hint{margin:0 0 16px;color:var(--soft);font-size:15px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:6px}
+.card{overflow:hidden}.ph{display:block;width:calc(100% + 32px);max-width:none;height:auto;aspect-ratio:5/4;object-fit:cover;margin:-16px -16px 0}.cap{font-size:13px;color:var(--soft);margin-bottom:4px}
 .card h3{margin:0;font-size:18px;line-height:1.35}
 .card .alt{font-size:13px;color:var(--soft)}
 .addr{font-size:15px;font-weight:500}
@@ -150,7 +151,7 @@ const AREAS=[
   ['幽冥劍獅','幽冥の剣獅','效忠街73號','','','Wr75wouVTTVbonMy9'],
   ['劍獅學堂劍獅','剣獅学堂の剣獅','效忠路48號','這一帶有好幾隻','この一帯に複数あり','sqNDvnyM51WVDQyM8']]},
  {id:'anbei',zh:'中興街・安北路',ja:'中興街・安北路',hzh:'住宅巷弄，安靜好逛',hja:'静かな住宅街の路地',items:[
-  ['雨漸耳劍獅','雨漸耳の剣獅','中興街44號','','','vzXYwspzGGbR8tJ46'],
+  ['雨漸耳劍獅','雨漸耳の剣獅','中興街44號','門口拱門上方的圓形彩繪劍獅，口銜雙劍','門のアーチ上部にある丸い彩色の剣獅。2本の剣をくわえています','vzXYwspzGGbR8tJ46','img/yujianer.jpg'],
   ['古意劍獅','素朴な剣獅','安北路121巷11號','','','vMPj4MuNLD9CiNBB6'],
   ['悟空劍獅・夢幻劍獅','悟空と夢幻の剣獅','安北路121巷10弄6號','文龍殿旁，兩隻中間有劍屏','文龍殿のそば、2体の間に剣屏','fBT7dauh9KP4KnF78'],
   ['慈眉劍獅','慈眉の剣獅','安北路131巷10號','','','QikgUmmzZ48guDnA7'],
@@ -168,7 +169,7 @@ const render=()=>{
   document.getElementById('areas').innerHTML=AREAS.map(a=>`<section class="area" id="${a.id}">
    <h2>${esc(ja?a.ja:a.zh)}<span>${a.items.length}${ja?' か所':' 處'}</span></h2>
    <p class="hint">${esc(ja?a.hja:a.hzh)}</p>
-   <div class="grid">${a.items.map(i=>`<article class="card">
+   <div class="grid">${a.items.map(i=>`<article class="card">${i[6]?`<img class="ph" src="${esc(i[6])}" alt="${esc(ja?i[1]:i[0])}" loading="lazy" width="800" height="640"><div class="cap">${ja?'2026年11月 現地撮影':'2026年11月 實地拍攝'}</div>`:''}
      <h3>${esc(ja?i[1]:i[0])}</h3><div class="alt">${esc(ja?i[0]:i[1])}</div>
      <div class="addr">${esc(i[2])}</div>
      <div class="note">${esc(ja?i[4]:i[3])}</div>
