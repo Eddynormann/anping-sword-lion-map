@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>安平劍獅散步地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: friendly walking guide for guests, warm and tidy
+   IDEA: a printed temple-street guide card handed out in Anping
+   PICTURE: a sword lion face (lion mask biting a sword), drawn in SVG
+   COLOUR and TYPE: brick red + oyster-lime white + gold accent; Noto Serif TC titles, Noto Sans TC/JP body
+   LAYOUT: red header band with lion, link buttons, area tabs, cards per area */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4efe6,#1b1512);--ink:light-dark(#2a1d17,#f2e9dd);--soft:light-dark(#6d5a4e,#c4b3a3);
+--brick:light-dark(#9c2f22,#7d2318);--card:light-dark(#fffaf2,#261d18);--line:light-dark(#e2d6c4,#3c2f27);
+--gold:light-dark(#b8862b,#e0b45a);--onbrick:#fbf3e6}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans TC","Noto Sans JP",system-ui,sans-serif;overflow-x:clip}
+:lang(ja) body,body.ja{font-family:"Noto Sans JP","Noto Sans TC",system-ui,sans-serif}
+a{color:inherit}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+.wrap{max-width:1160px;margin:0 auto}
+header{background:var(--brick);color:var(--onbrick)}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center}
+.lang{display:inline-flex;border:1.5px solid rgba(251,243,230,.6);border-radius:999px;overflow:hidden;margin-bottom:22px}
+.lang button{all:unset;cursor:pointer;padding:9px 18px;min-height:26px;font-size:15px;font-weight:500}
+.lang button[aria-pressed=true]{background:var(--onbrick);color:#9c2f22}
+.lang button:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+h1{font:900 clamp(32px,5vw,52px)/1.1 "Noto Serif TC","Noto Sans JP",serif;margin:0 0 14px;text-wrap:balance}
+.sub{font-size:17px;max-width:34em;margin:0 0 22px;opacity:.95}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.solid{background:var(--onbrick);color:#7d2318}
+.btn.ghost{border:1.5px solid rgba(251,243,230,.7);color:var(--onbrick)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.lion{width:100%;max-width:400px;justify-self:center;aspect-ratio:1}
+.lion svg{width:100%;height:100%;display:block}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .scroll{display:flex;gap:8px;padding:10px max(5vw,16px);max-width:1260px;margin:0 auto}
+nav a{flex:none;text-decoration:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-size:14px;font-weight:500;background:var(--card)}
+nav a:focus-visible{outline:3px solid var(--gold)}
+.scroll{overflow-x:auto}
+html{scroll-padding-top:72px;scroll-behavior:smooth}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:8px}
+.tip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15px}
+.tip b{display:block;color:var(--brick);margin-bottom:2px}
+:root[data-theme=dark] .tip b{color:var(--gold)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .tip b,:root:not([data-theme=light]) .area h2 span{color:var(--gold)}}
+.area{margin-top:clamp(28px,4vw,48px)}
+.area h2{font:900 clamp(24px,3vw,30px)/1.2 "Noto Serif TC","Noto Sans JP",serif;margin:0 0 4px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.area h2 span{color:var(--brick);font-size:.8em}
+:root[data-theme=dark] .area h2 span{color:var(--gold)}
+.area p.hint{margin:0 0 16px;color:var(--soft);font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:6px}
+.card h3{margin:0;font-size:18px;line-height:1.35}
+.card .alt{font-size:13px;color:var(--soft)}
+.addr{font-size:15px;font-weight:500}
+.note{font-size:14px;color:var(--soft);flex:1}
+.map{align-self:flex-start;margin-top:6px;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 14px;border-radius:9px;background:var(--brick);color:var(--onbrick);text-decoration:none;font-weight:700;font-size:14px}
+.map:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+footer{border-top:1px solid var(--line);color:var(--soft);font-size:14px}
+footer a{color:var(--ink)}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.lion{max-width:240px;order:-1}}
+@media(prefers-reduced-motion:no-preference){.lion svg{animation:sway 6s ease-in-out infinite;transform-origin:50% 60%}@keyframes sway{50%{transform:rotate(-2deg)}}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap hero">
+    <div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="b-zh" aria-pressed="true">中文</button>
+        <button type="button" id="b-ja" aria-pressed="false">日本語</button>
+      </div>
+      <h1 data-zh="安平劍獅散步地圖" data-ja="安平 剣獅さんぽマップ">安平劍獅散步地圖</h1>
+      <p class="sub" data-zh="安平是「劍獅的故鄉」。老屋門楣上口銜寶劍的獅面，是當地辟邪、守護家宅的傳統。拿著這份地圖，抬頭找找看吧！" data-ja="台南・安平は「剣獅（けんし）のふるさと」。剣をくわえた獅子の面を家の門に掲げる、魔除けと家内安全の伝統です。地図を片手に、見上げて探してみましょう！">安平是「劍獅的故鄉」。老屋門楣上口銜寶劍的獅面，是當地辟邪、守護家宅的傳統。拿著這份地圖，抬頭找找看吧！</p>
+      <div class="links">
+        <a class="btn solid" href="https://www.google.com/maps/d/viewer?mid=z-ev2YaHdd6c.kEIOX4b4xVzE" target="_blank" rel="noopener" data-zh="Google 劍獅尋寶圖" data-ja="Google 剣獅マップ">Google 劍獅尋寶圖</a>
+        <a class="btn ghost" href="https://www.twtainan.net/zh-tw/publication/248/" target="_blank" rel="noopener" data-zh="官方手繪地圖 PDF" data-ja="公式イラストマップ（PDF）">官方手繪地圖 PDF</a>
+      </div>
+    </div>
+    <div class="lion" aria-hidden="true">
+      <svg viewBox="0 0 400 400">
+        <defs>
+          <radialGradient id="face" cx="45%" cy="38%" r="65%"><stop offset="0" stop-color="#f6d27a"/><stop offset="1" stop-color="#c98a2c"/></radialGradient>
+          <path id="petal" d="M200 40 C222 70 222 100 200 120 C178 100 178 70 200 40Z"/>
+        </defs>
+        <ellipse cx="200" cy="372" rx="130" ry="14" fill="#000" opacity=".18"/>
+        <g id="mane" fill="#2f6b4f" stroke="#1d4634" stroke-width="3"></g>
+        <circle cx="200" cy="205" r="120" fill="url(#face)" stroke="#7a4a12" stroke-width="5"/>
+        <path d="M120 150 q35 -30 70 -6" fill="none" stroke="#2a1d17" stroke-width="10" stroke-linecap="round"/>
+        <path d="M280 150 q-35 -30 -70 -6" fill="none" stroke="#2a1d17" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="160" cy="180" r="26" fill="#fff" stroke="#2a1d17" stroke-width="5"/>
+        <circle cx="240" cy="180" r="26" fill="#fff" stroke="#2a1d17" stroke-width="5"/>
+        <circle cx="164" cy="184" r="12" fill="#2a1d17"/><circle cx="236" cy="184" r="12" fill="#2a1d17"/>
+        <path d="M178 212 q22 -18 44 0 q8 26 -22 32 q-30 -6 -22 -32Z" fill="#b8402a" stroke="#2a1d17" stroke-width="4"/>
+        <path d="M140 262 q60 40 120 0 l-6 32 q-54 26 -108 0Z" fill="#7d1d14" stroke="#2a1d17" stroke-width="4"/>
+        <rect x="40" y="266" width="270" height="14" rx="3" fill="#dfe4ea" stroke="#4a4f57" stroke-width="3"/>
+        <rect x="306" y="258" width="14" height="30" rx="3" fill="#b8862b" stroke="#5a3d0e" stroke-width="3"/>
+        <rect x="318" y="265" width="48" height="16" rx="6" fill="#9c2f22" stroke="#5a160f" stroke-width="3"/>
+        <path d="M40 266 l-22 7 l22 7Z" fill="#dfe4ea" stroke="#4a4f57" stroke-width="3"/>
+        <path d="M150 272 l8 -12 l8 12 M234 272 l8 -12 l8 12" fill="#fff" stroke="#2a1d17" stroke-width="3"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Areas"><div class="scroll" id="nav"></div></nav>
+
+<main class="band"><div class="wrap">
+  <div class="tips">
+    <div class="tip"><b data-zh="怎麼找" data-ja="探し方">怎麼找</b><span data-zh="劍獅多在門楣、屋簷、照牆上，記得抬頭看。" data-ja="剣獅は門の上・軒先・壁に飾られています。見上げてみてください。">劍獅多在門楣、屋簷、照牆上，記得抬頭看。</span></div>
+    <div class="tip"><b data-zh="建議路線" data-ja="おすすめルート">建議路線</b><span data-zh="從運河路一帶開始最集中，再往古堡街、延平街老街走。" data-ja="運河路エリアに最も集中。そこから古堡街、延平街（安平老街）へ歩くのがおすすめです。">從運河路一帶開始最集中，再往古堡街、延平街老街走。</span></div>
+    <div class="tip"><b data-zh="小提醒" data-ja="ご注意">小提醒</b><span data-zh="多數劍獅在住家門口，請放低音量，不要進入私人空間。" data-ja="多くは一般のお宅の玄関です。お静かに、敷地には入らないようお願いします。">多數劍獅在住家門口，請放低音量，不要進入私人空間。</span></div>
+  </div>
+  <div id="areas"></div>
+</div></main>
+
+<footer class="band"><div class="wrap">
+  <p data-zh="地址與 Google 地圖連結整理自部落客實地記錄：黑崎時代、冬烘居；官方摺頁由台南市政府觀光旅遊局發行。部分劍獅可能因房屋整修而移動或消失。" data-ja="住所と Google マップのリンクは、ブログ「黒崎時代」「冬烘居」の現地記録をもとに整理しました。公式マップは台南市政府観光旅遊局の発行です。家屋の改修などにより、移動・消失している剣獅もあります。">地址與 Google 地圖連結整理自部落客實地記錄：黑崎時代、冬烘居；官方摺頁由台南市政府觀光旅遊局發行。部分劍獅可能因房屋整修而移動或消失。</p>
+  <p><a href="https://kurosaki.tw/anping-sword-lion-map/" target="_blank" rel="noopener">黑崎時代</a> ・ <a href="https://donghong.info/blog/?p=15776" target="_blank" rel="noopener">冬烘居</a> ・ <a href="https://www.twtainan.net/zh-tw/publication/248/" target="_blank" rel="noopener">台南旅遊網</a></p>
+</div></footer>
+
+<script>
+{
+const G='https://goo.gl/maps/';
+const AREAS=[
+ {id:'canal',zh:'運河路一帶',ja:'運河路エリア',hzh:'最集中，建議從這裡開始',hja:'最も集中しているエリア。ここからスタートがおすすめ',items:[
+  ['顧囝仔劍獅','子守りの剣獅','運河路31號','李宅牆上，妙壽宮路口','李宅の壁、妙壽宮の角','PcFLThefoWGeifL18'],
+  ['小不點劍獅（歐氏宗祠）','おちびの剣獅（欧氏宗祠）','運河路13巷3弄18號','在很窄的巷子裡','とても細い路地の中','8WVuDWBqyynTvQ4c6'],
+  ['滑稽劍獅（嘟嘟劍獅）','おどけ剣獅','運河路13巷4號','安平許家小吃後面的巷子','「安平許家小吃」裏の路地','pkNNnPTFDDnfvhNW8'],
+  ['哈馬劍獅','出っ歯の剣獅','運河路23巷6號','兩顆大門牙是特色','大きな前歯2本がトレードマーク','TMgPrb6Xkv4oZfmi6'],
+  ['善惡獅','善悪の獅子','運河路23巷15號','在哈馬劍獅正對面','出っ歯の剣獅の真向かい','3U38QZbAtgwuV7zY7'],
+  ['翱雲劍獅','雲翔ける剣獅','運河路13巷31弄1號','民宅牆上彩繪','民家の壁の彩色剣獅','XM5kG224y1hgtNYs8'],
+  ['哈巴狗劍獅（運河劍獅）','狆（ちん）の剣獅','運河路40巷12弄1號','照牆形式','照壁（目隠し壁）タイプ','x7CFsMkrJAVzMMwGA']]},
+ {id:'gubao',zh:'古堡街',ja:'古堡街',hzh:'正合興蜜餞門口就有好幾隻',hja:'老舗の砂糖漬け店「正合興」の店先に数体',items:[
+  ['古錐劍獅・無奈劍獅・蜜餞大樓劍獅群','正合興の剣獅たち','古堡街47號','正合興蜜餞門口兩側與大樓上，共約六隻','正合興蜜餞の入口両側と建物上部に計6体ほど','y2YYPFjKfvVfWKLV8']]},
+ {id:'yanping',zh:'延平街老街・效忠街',ja:'延平街（安平老街）・効忠街',hzh:'邊逛老街邊找',hja:'老街散策しながら探せます',items:[
+  ['蟠龍劍獅','蟠龍の剣獅','延平街72號','','','Wvke15CYDirmc7me8'],
+  ['周龍殿劍獅','周龍殿の剣獅','延平街104巷口','巷口側牆，周龍殿掛魚旁','路地入口の側壁、周龍殿の吊り魚のそば','RvxYqk7q634fYxtdA'],
+  ['神秘劍獅','神秘の剣獅','延平街104巷8號','周龍殿旁巷內','周龍殿横の路地の中','FLTG8CZPxBLXNthx5'],
+  ['達摩劍獅','達磨の剣獅','延平街104巷4號','跳房子民宿內','民宿「跳房子」内','FsySKd516KwkeqqZ9'],
+  ['九九神獅','九九神獅','延平街140號','伯龍坊','伯龍坊にて','Dj7gGyKpsXivwbQ67'],
+  ['海山館劍獅・劍獅屏・迷你劍獅','海山館の剣獅（剣獅屏・ミニ剣獅）','效忠街52巷3號','海山館入口與館內','海山館の入口と館内','Zwo2sCw1bDVoyYdS7'],
+  ['幽冥劍獅','幽冥の剣獅','效忠街73號','','','Wr75wouVTTVbonMy9'],
+  ['劍獅學堂劍獅','剣獅学堂の剣獅','效忠路48號','這一帶有好幾隻','この一帯に複数あり','sqNDvnyM51WVDQyM8']]},
+ {id:'anbei',zh:'中興街・安北路',ja:'中興街・安北路',hzh:'住宅巷弄，安靜好逛',hja:'静かな住宅街の路地',items:[
+  ['雨漸耳劍獅','雨漸耳の剣獅','中興街44號','','','vzXYwspzGGbR8tJ46'],
+  ['古意劍獅','素朴な剣獅','安北路121巷11號','','','vMPj4MuNLD9CiNBB6'],
+  ['悟空劍獅・夢幻劍獅','悟空と夢幻の剣獅','安北路121巷10弄6號','文龍殿旁，兩隻中間有劍屏','文龍殿のそば、2体の間に剣屏','fBT7dauh9KP4KnF78'],
+  ['慈眉劍獅','慈眉の剣獅','安北路131巷10號','','','QikgUmmzZ48guDnA7'],
+  ['義行劍獅','義行の剣獅','安北路131巷20號前','紅牆上','赤い壁の上','5s9kVPh4Hsiwnqug9'],
+  ['肌肉劍獅','筋肉の剣獅','安北路40巷11號','民宅大門','民家の玄関','GYHV7rpUhZRMxkz9A']]},
+ {id:'west',zh:'西邊',ja:'西側エリア',hzh:'離老街稍遠，時間充裕再去',hja:'老街から少し離れます。時間に余裕があれば',items:[
+  ['捲毛劍獅','巻き毛の剣獅','安平路850巷4弄轉角','古都偶戲院對面的轉角立牌','古都偶戲院向かいの角の看板','NbUZokdoquJ81xjh7'],
+  ['怒目金剛劍獅','怒目金剛の剣獅','安平路850巷4弄8號','和捲毛劍獅同一條巷子，古宅拱門上','巻き毛の剣獅と同じ路地、古民家のアーチの上','FB9PeqQDyjXkjADi8']]}
+];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let lang='zh';
+const render=()=>{
+  const ja=lang==='ja';
+  document.getElementById('nav').innerHTML=AREAS.map(a=>`<a href="#${a.id}">${esc(ja?a.ja:a.zh)}</a>`).join('');
+  document.getElementById('areas').innerHTML=AREAS.map(a=>`<section class="area" id="${a.id}">
+   <h2>${esc(ja?a.ja:a.zh)}<span>${a.items.length}${ja?' か所':' 處'}</span></h2>
+   <p class="hint">${esc(ja?a.hja:a.hzh)}</p>
+   <div class="grid">${a.items.map(i=>`<article class="card">
+     <h3>${esc(ja?i[1]:i[0])}</h3><div class="alt">${esc(ja?i[0]:i[1])}</div>
+     <div class="addr">${esc(i[2])}</div>
+     <div class="note">${esc(ja?i[4]:i[3])}</div>
+     <a class="map" href="${G+esc(i[5])}" target="_blank" rel="noopener">${ja?'Google マップで開く':'在 Google 地圖開啟'} ↗</a>
+   </article>`).join('')}</div></section>`).join('');
+};
+const setLang=l=>{
+  lang=l;
+  document.documentElement.lang=l==='ja'?'ja':'zh-Hant';
+  document.body.classList.toggle('ja',l==='ja');
+  document.title=l==='ja'?'安平 剣獅さんぽマップ':'安平劍獅散步地圖';
+  for(const el of document.querySelectorAll('[data-zh]'))el.textContent=el.dataset[l];
+  document.getElementById('b-zh').setAttribute('aria-pressed',l==='zh');
+  document.getElementById('b-ja').setAttribute('aria-pressed',l==='ja');
+  render();
+};
+const mane=document.getElementById('mane');
+let m='';for(let k=0;k<16;k++)m+=`<use href="#petal" transform="rotate(${k*22.5} 200 205) translate(0 -10)"/>`;
+mane.innerHTML=m;
+document.getElementById('b-zh').addEventListener('click',()=>{setLang('zh');try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}});
+document.getElementById('b-ja').addEventListener('click',()=>{setLang('ja');location.hash='ja'});
+const fromHash=()=>{if(location.hash==='#ja')setLang('ja');else if(!lang)setLang('zh')};
+setLang(location.hash==='#ja'?'ja':'zh');
+window.addEventListener('hashchange',fromHash);
+}
+</script>
+</body>
+</html>
