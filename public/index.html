@@ -128,7 +128,7 @@ footer a{color:var(--ink)}
 
 <script>
 {
-const G='https://goo.gl/maps/';
+const G='https://www.google.com/maps/search/?api=1&query=';
 const AREAS=[
  {id:'canal',zh:'運河路一帶',ja:'運河路エリア',hzh:'最集中，建議從這裡開始',hja:'最も集中しているエリア。ここからスタートがおすすめ',items:[
   ['顧囝仔劍獅','子守りの剣獅','運河路31號','李宅牆上，妙壽宮路口','李宅の壁、妙壽宮の角','PcFLThefoWGeifL18'],
@@ -172,7 +172,7 @@ const render=()=>{
      <h3>${esc(ja?i[1]:i[0])}</h3><div class="alt">${esc(ja?i[0]:i[1])}</div>
      <div class="addr">${esc(i[2])}</div>
      <div class="note">${esc(ja?i[4]:i[3])}</div>
-     <a class="map" href="${G+esc(i[5])}" target="_blank" rel="noopener">${ja?'Google マップで開く':'在 Google 地圖開啟'} ↗</a>
+     <a class="map" href="${G+encodeURIComponent('臺南市安平區'+i[2])}" target="_blank" rel="noopener">${ja?'Google マップで開く':'在 Google 地圖開啟'} ↗</a>
    </article>`).join('')}</div></section>`).join('');
 };
 const setLang=l=>{
